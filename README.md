@@ -7,7 +7,7 @@ The server application is written with the Tornado web framework, so it is requi
 
 ```pip install tornado```
 
-Then copy the sample config file to config.ini and create your own secret key, this can be anything as long as people can't guess it.
+Then copy the sample config file to config.ini and edit config.ini to add your own secret key, this can be anything as long as people can't guess it.
 
 ```cp sample_config.ini config.ini```
 
