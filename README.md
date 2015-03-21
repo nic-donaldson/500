@@ -14,4 +14,4 @@ Then copy the sample config file to config.ini and edit config.ini to add your o
 Then you are good to go!
 ```python server.py```
 
-Connect to localhost:8888 or your.ip.address:8888 .
+Connect to ```localhost:8888``` or ```your.ip.address:8888``` .
