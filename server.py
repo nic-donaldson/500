@@ -23,5 +23,5 @@ application = tornado.web.Application([
 ], **settings)
 
 if __name__ == "__main__":
-    application.listen(8888)
+    application.listen(int(config['networking']['port']))
     tornado.ioloop.IOLoop.instance().start()
