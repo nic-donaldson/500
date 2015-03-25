@@ -7,6 +7,10 @@ class Hello(tornado.web.RequestHandler):
     def get(self):
         self.write("Hello, world!")
 
+class Hello2(tornado.web.RequestHandler):
+    def get(self):
+        self.render("home.html")
+
 config = configparser.ConfigParser()
 config.read("config.ini")
 
@@ -15,10 +19,12 @@ settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
     "cookie_secret":config['secrets']['cookie'],
     "xsrf_cookies": True,
+    "debug": config['dev']['debug']
 }
 
 application = tornado.web.Application([
     (r"/", Hello),
+    (r"/home", Hello2),
     
 ], **settings)
 
