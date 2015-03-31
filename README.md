@@ -1,5 +1,5 @@
 # 500
-500 Card Game
+500 Card Game (note: does not actually work. at all)
 
 ## Installation
 
