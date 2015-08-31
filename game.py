@@ -27,6 +27,7 @@ class Player(Enum):
 
 
 class Suit(IntEnum):
+    notrump  = 5
     hearts   = 4
     diamonds = 3
     clubs    = 2
@@ -49,6 +50,7 @@ class Value(IntEnum):
     three = 3
     two   = 2
 
+
 class Command:
     def __init__(self, name):
         self.name = name
@@ -62,23 +64,17 @@ class StartCommand(Command):
         Command.__init__(self, "start")
 
     def execute(self, game):
-        if game.phase == GamePhase.postgame:
-            game._init_deck()
-            game.deal()
-            game.phase = GamePhase.bid
-        else:
-            raise IllegalMoveException("start")
+        game.start()
 
 
 class BidCommand(Command):
     def __init__(self, player, bid):
+        self.player = player
+        self.bid = bid
         Command.__init__(self, "bid {} {}".format(player, bid))
 
     def execute(self, game):
-        if game.phase == GamePhase.bid:
-            pass
-        else:
-            raise IllegalMoveException("start")
+        game.bid(self.player, self.bid)
 
 
 class Game500:
@@ -92,12 +88,28 @@ class Game500:
         self.scores = {}    # team -> num
 
         self.dealer = random.choice(list(Player))
+        self.turn   = (self.dealer % 4) + 1
         self.trumps = None                # Suit
         self.bid    = None                # (num, Suit, team)
         self.phase  = GamePhase.postgame  # GamePhase
 
     def command(self, cmd):
         cmd.execute(self)
+
+    def bid(self, player, bid):
+        if game.phase == GamePhase.bid and game.turn == self.player:
+            if self.bid == None:
+                self.bid = bid
+        else:
+            raise IllegalMoveException("bid {} {}".format(player, bid))
+
+    def start(self):
+        if self.phase == GamePhase.postgame:
+            self._init_deck()
+            self.deal()
+            self.phase = GamePhase.bid
+        else:
+            raise IllegalMoveException("start")
 
     def _init_deck(self):
         """ Initialise the deck to have one joker, the red fours,
@@ -114,8 +126,10 @@ class Game500:
 
         # Everything else
         for value in map(Value, range(5,15)):
-            for suit in Suit:
+            for suit in map(Suit, range(1,5)):
                 self.deck.append((value, suit))
+
+        assert(len(self.deck) == 43)
 
         # shuffffle
         random.shuffle(self.deck)
